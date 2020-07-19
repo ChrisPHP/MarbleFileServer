@@ -3,15 +3,18 @@ package main
 import (
   "net/http"
   "fmt"
+  "log"
+
+  "github.com/ChrisPHP/MarbleFileServer/uploads"
 )
 
-func uploadFile(w http.ResponseWriter, r *http.Request) {
-  fmt.Fprint(w, "Test")
-}
-
 func setupRoutes() {
-  http.HandleFunc("/upload", uploadFile)
-  http.ListenAndServe(":8080", nil)
+  fileServer := http.FileServer(http.Dir("./static"))
+  http.Handle("/", fileServer)
+  http.HandleFunc("/upload", uploads.UploadHandler)
+  if err := http.ListenAndServe(":8080", nil); err != nil {
+    log.Fatal(err)
+  }
 }
 
 func main() {
