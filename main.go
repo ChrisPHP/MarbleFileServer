@@ -22,8 +22,9 @@ type Dir struct {
 func setupRoutes() {
   fileServer := http.FileServer(http.Dir("./static"))
   http.Handle("/", fileServer)
-  http.HandleFunc("/upload", uploads.UploadHandler)
 
+  http.HandleFunc("/Create", disk.CreateDirHandler)
+  http.HandleFunc("/upload", uploads.UploadHandler)
   http.HandleFunc("/view", disk.DirHandler)
 
   if err := http.ListenAndServe(":8080", nil); err != nil {

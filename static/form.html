@@ -1,12 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>Marble's File Server</title>
   <meta charset="UTF-8" />
 </head>
 <body>
+  <h1>View Directory</View>
   <form method="POST" action="/view">
-    <input type="submit" value="go" />
+    <select id="dirs" name="dirs">
+      <option value="./images">images</option>
+    </select>
+    <input type="submit" value="View" />
   </form>
+  <h1>Create new Directory</h1>
+  <form method="POST" action="/Create">
+    <input type="text" name="newDir">
+    <input type="submit" value="Create" />
+  </form>
+  <h1>Upload Files</h1>
   <div>
     <form method="POST" action="/upload" enctype="multipart/form-data">
         <input type="file" name="myFile" />
