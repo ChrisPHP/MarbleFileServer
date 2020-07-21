@@ -2,37 +2,57 @@ package disk
 
 import (
   "fmt"
+  "io/ioutil"
+  "net/http"
+  "html/template"
 )
 
-type DiskStats struct {
-  Total uint64 `json:"Total"`
-  Used  uint64 `json:"used"`
-  Free  uint64 `json:"free"`
+type Content struct {
+  File string
 }
-/*
-func Usage(path string) (HDD DiskStats) {
-  fs := syscall.Statfs_t{}
-  err := syscall.Statfs(path, &fs)
+
+type Dir struct {
+  Contents []Content
+}
+
+func DirHandler(w http.ResponseWriter, r *http.Request) {
+  tmpl := template.Must(template.ParseFiles("./static/test.html"))
+
+  //Read the directory
+  files, err := ioutil.ReadDir("./images")
   if err != nil {
-    return
+    fmt.Println(err)
   }
-  HDD.Total  = fs.Blocks * uint64(fs.Bsize)
-  HDD.Free   = fs.Bfree * uint64(fs.Bsize)
-  HDD.Used   = HDD.Total - HDD.Free
-  return
-}
-*/
-const (
-  B = 1
-  KB = 1024 * B
-  MB = 1024 * KB
-  GB = 1024 * MB
-)
 
-func CheckDisk() {
-  //HDD := Usage("/")
-  //fmt.Println("Total: %.2f GB\n", float64(HDD.Total)/float64(GB))
-  //fmt.Println("Used: %.2f GB\n", float64(HDD.Used)/float64(GB))
-  //fmt.Println("Free: %.2f GB\n", float64(HDD.Free)/float64(GB))
-  fmt.Println("WIP")
+  var dir Dir
+
+  //Add the file names to the struct
+  for _, file := range files {
+    dir.Contents = append(dir.Contents, Content{
+      File: file.Name(),
+    })
+    fmt.Println(dir)
+  }
+
+  //Items found in directory is listed onto the template
+  err = tmpl.Execute(w, dir)
+    if err != nil {
+      fmt.Println(err)
+    }
+}
+
+func ShowDir() {
+  files, err := ioutil.ReadDir("./images")
+  if err != nil {
+    fmt.Println(err)
+  }
+
+  var dir Dir
+
+  for _, file := range files {
+    dir.Contents = append(dir.Contents, Content{
+      File: file.Name(),
+    })
+    fmt.Println(dir)
+  }
 }

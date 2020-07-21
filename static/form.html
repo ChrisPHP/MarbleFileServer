@@ -4,11 +4,14 @@
   <meta charset="UTF-8" />
 </head>
 <body>
-<div>
-  <form method="POST" action="/upload" enctype="multipart/form-data">
-      <input type="file" name="myFile" />
-      <input type="submit" value="upload" />
+  <form method="POST" action="/view">
+    <input type="submit" value="go" />
   </form>
-</div>
+  <div>
+    <form method="POST" action="/upload" enctype="multipart/form-data">
+        <input type="file" name="myFile" />
+        <input type="submit" value="upload" />
+    </form>
+  </div>
 </body>
 </html>
