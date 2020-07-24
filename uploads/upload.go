@@ -28,10 +28,10 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
   fmt.Printf("File Size: %+v\n", handler.Size)
   fmt.Printf("MIME header: %+v\n", handler.Header)
 
-  SaveFile(w, file, handler)
+  SaveFile(w, file, handler, r)
 }
 
-func SaveFile(w http.ResponseWriter, file multipart.File, handler *multipart.FileHeader) {
+func SaveFile(w http.ResponseWriter, file multipart.File, handler *multipart.FileHeader, r *http.Request) {
   //Read all the users data
   data, err := ioutil.ReadAll(file)
   if err != nil {
@@ -40,7 +40,7 @@ func SaveFile(w http.ResponseWriter, file multipart.File, handler *multipart.Fil
   }
 
   //Write the data to the servers storage
-  err = ioutil.WriteFile("images/"+handler.Filename, data, 0666)
+  err = ioutil.WriteFile(r.FormValue("Fold")+handler.Filename, data, 0666)
   if err != nil {
     fmt.Fprintf(w, "%v", err)
     return

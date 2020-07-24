@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Marble's File Server</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, intial-scale=1" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Files in {{.CurDir}}</h2>
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Create a folder</h2>
+          <form method="POST" action="/Create">
+            <input type="text" name="newDir">
+            <input type="hidden" name="Fold" value="{{.CurDir}}">
+            <input type="submit" value="Create">
+          </form>
+        </div>
+        <div class="col-md-6">
+          <h2>Upload a file</h2>
+          <form method="POST" action="/upload" enctype="multipart/form-data">
+            <input type="file" name="myFile">
+            <input type="hidden" name="Fold" value="{{.CurDir}}">
+            <input type="submit" value="Upload">
+          </form>
+        </div>
+      </div>
+      <h1>Click to open a folder or download a file</h1>
+      {{range .Contents}}
+        {{if .Fold}}
+        <form method="POST" action="/view">
+          <input type="submit" value="{{.Fold}}/" name="dirs"/>
+        </form>
+        {{else}}
+        <form method="POST" action="/Download">
+          <input type="submit" name="FoldFile" value="{{.File}}" />
+        </form>
+        {{end}}
+      {{end}}
+  </div>
+</body>
+</html>
