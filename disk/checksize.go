@@ -19,6 +19,17 @@ type Dir struct {
   CurDir string
 }
 
+func DeleteHandler(w http.ResponseWriter, r *http.Request) {
+  //Delete file Handler
+  err := os.Remove(r.FormValue("DelFile"))
+  if err != nil {
+    fmt.Println(err)
+    return
+  }
+
+  fmt.Println("File Deleted")
+}
+
 func DownloadHandler(w http.ResponseWriter, r *http.Request) {
   fmt.Println(r.FormValue("FoldFile"))
   http.ServeFile(w, r, r.FormValue("FoldFile"))

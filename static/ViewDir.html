@@ -30,17 +30,37 @@
         </div>
       </div>
       <h1>Click to open a folder or download a file</h1>
-      {{range .Contents}}
-        {{if .Fold}}
-        <form method="POST" action="/view">
-          <input type="submit" value="{{.Fold}}/" name="dirs"/>
-        </form>
-        {{else}}
-        <form method="POST" action="/Download">
-          <input type="submit" name="FoldFile" value="{{.File}}" />
-        </form>
-        {{end}}
-      {{end}}
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Folders</h2>
+          {{range .Contents}}
+              {{if .Fold}}
+                <form method="POST" action="/view">
+                  <input type="submit" value="{{.Fold}}/" name="dirs"/>
+                </form>
+              {{end}}
+          {{end}}
+        </div>
+        <div class="col-md-6">
+          <h2>Files</h2>
+            {{range .Contents}}
+              {{if .File}}
+                  <div class="col-md-6">
+                    <form method="POST" action="/Download">
+                      <input type="submit" name="FoldFile" value="{{.File}}" />
+                    </form>
+                  </div>
+                  <div class="col-md-6">
+                    <form method="POST" action="/Delete">
+                      <input type="hidden" name="DelFile" value="{{.File}}" />
+                      <input type="submit" value="Delete" />
+                    </form>
+                  </div>
+              {{end}}
+            {{end}}
+          </table>
+      </div>
+    </div>
   </div>
 </body>
 </html>
