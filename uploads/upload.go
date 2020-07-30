@@ -5,6 +5,8 @@ import (
   "io/ioutil"
   "mime/multipart"
   "fmt"
+
+  "github.com/ChrisPHP/MarbleFileServer/disk"
 )
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
@@ -29,6 +31,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
   fmt.Printf("MIME header: %+v\n", handler.Header)
 
   SaveFile(w, file, handler, r)
+  disk.DirHandler(w, r)
 }
 
 func SaveFile(w http.ResponseWriter, file multipart.File, handler *multipart.FileHeader, r *http.Request) {
@@ -40,10 +43,9 @@ func SaveFile(w http.ResponseWriter, file multipart.File, handler *multipart.Fil
   }
 
   //Write the data to the servers storage
-  err = ioutil.WriteFile(r.FormValue("Fold")+handler.Filename, data, 0666)
+  err = ioutil.WriteFile(r.FormValue("dirs")+handler.Filename, data, 0666)
   if err != nil {
     fmt.Fprintf(w, "%v", err)
     return
   }
-  fmt.Fprintf(w, "File uploaded")
 }

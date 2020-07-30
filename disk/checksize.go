@@ -6,18 +6,29 @@ import (
   "net/http"
   "html/template"
   "os"
+  "strings"
 )
 
 type Content struct {
+  FileDir string
   File string
+  FoldDir string
   Fold string
-  Dime string
 }
 
 type Dir struct {
   Contents []Content
   CurDir string
+  PrevDir string
+  TheDir string
 }
+
+type Redirect struct {
+  Result string
+  Fold string
+}
+
+var glob string
 
 func DeleteHandler(w http.ResponseWriter, r *http.Request) {
   //Delete file Handler
@@ -26,10 +37,11 @@ func DeleteHandler(w http.ResponseWriter, r *http.Request) {
     fmt.Println(err)
     return
   }
-
-  fmt.Println("File Deleted")
+  fmt.Println(r.FormValue("dirs"))
+  DirHandler(w, r)
 }
 
+//Serve file for download or viewing
 func DownloadHandler(w http.ResponseWriter, r *http.Request) {
   fmt.Println(r.FormValue("FoldFile"))
   http.ServeFile(w, r, r.FormValue("FoldFile"))
@@ -52,17 +64,34 @@ func DirHandler(w http.ResponseWriter, r *http.Request) {
 
   var dir Dir
 
+  if (r.FormValue("PrevDir") == "") {
+    dir.PrevDir = "/Marble1/"
+  } else {
+    var x string
+    if (r.FormValue("dirs") != "/Marble1/") {
+      parts := strings.SplitAfter(r.FormValue("dirs"), "/")
+      for i := 0; i < len(parts) - 2; i++ {
+        x += parts[i]
+      }
+      dir.PrevDir = x
+    } else {
+      dir.PrevDir = r.FormValue("dirs")
+    }
+  }
+
   dir.CurDir = r.FormValue("dirs")
 
   //Add the file names to the struct
   for _, file := range files {
     if (file.IsDir() == true) {
       dir.Contents = append(dir.Contents, Content{
-        Fold: r.FormValue("dirs") + file.Name(),
+        FoldDir: r.FormValue("dirs") + file.Name(),
+        Fold: file.Name(),
       })
     } else {
       dir.Contents = append(dir.Contents, Content{
-        File: r.FormValue("dirs") + file.Name(),
+        FileDir: r.FormValue("dirs") + file.Name(),
+        File: file.Name(),
       })
     }
   }
@@ -82,7 +111,7 @@ func CreateDirHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  FilePath := r.FormValue("Fold") + "/" + r.FormValue("newDir")
+  FilePath := r.FormValue("dirs") + "/" + r.FormValue("newDir")
 
   err := os.Mkdir(FilePath, 0755)
   if (err != nil) {
@@ -91,5 +120,5 @@ func CreateDirHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  fmt.Fprintf(w, "Directory has been made")
+  DirHandler(w, r)
 }
