@@ -27,6 +27,7 @@ func setupRoutes() {
   http.HandleFunc("/upload", uploads.UploadHandler)
   http.HandleFunc("/view", disk.DirHandler)
   http.HandleFunc("/Download", disk.DownloadHandler)
+  http.HandleFunc("/Delete", disk.DeleteHandler)
 
   if err := http.ListenAndServe(":8080", nil); err != nil {
     log.Fatal(err)
