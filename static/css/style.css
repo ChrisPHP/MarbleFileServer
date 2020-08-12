@@ -27,12 +27,14 @@ body {
 
 .Contents {
   border-style: solid;
+  border-color: #DDC9B4;
   padding: 20px;
   background-color: #38302E;
 }
 
 .Itemheading {
   border-style: solid;
+  border-color: #DDC9B4;
   padding: 1%;
   background-color: #38302E;
 }
