@@ -28,8 +28,6 @@ type Redirect struct {
   Fold string
 }
 
-var glob string
-
 func DeleteHandler(w http.ResponseWriter, r *http.Request) {
   //Delete file Handler
   err := os.Remove(r.FormValue("DelFile"))

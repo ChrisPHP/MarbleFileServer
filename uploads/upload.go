@@ -16,21 +16,21 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  //Recieve users submitted files
-  file, handler, err := r.FormFile("myFile")
-  if err != nil {
-    fmt.Println("Error to recieve files")
-    fmt.Println(err)
-    return
+  r.ParseMultipartForm(32 << 20)
+  files := r.MultipartForm.File["myFile"]
+
+  for _, handler := range files {
+    fmt.Println(handler.Filename)
+    file, err := handler.Open()
+    defer file.Close()
+    if err != nil {
+      fmt.Println(err)
+      return
+    }
+
+    SaveFile(w, file, handler, r)
   }
-  defer file.Close()
 
-  //prints to console some file details
-  fmt.Printf("Uploaded File: %+v\n", handler.Filename)
-  fmt.Printf("File Size: %+v\n", handler.Size)
-  fmt.Printf("MIME header: %+v\n", handler.Header)
-
-  SaveFile(w, file, handler, r)
   disk.DirHandler(w, r)
 }
 
