@@ -1,5 +1,62 @@
+body {
+  background-color: #DDC9B4;
+  color: #fff;
+  font-family: 'Fira Sans Condensed', sans-serif;
+}
+
+.container {
+  background-color: #38302E;
+  padding-bottom: 15px;
+  padding-top: 15px;
+  margin-top: 15px;
+
+}
+
 .Center {
   text-align: center;
-  background-color: #000;
-  margin: 20px;
+}
+
+.folders {
+  width: 50px;
+  height: auto;
+}
+
+.lbl {
+  font-size: 2em;
+}
+
+.Contents {
+  border-style: solid;
+  padding: 20px;
+  background-color: #38302E;
+}
+
+.Itemheading {
+  border-style: solid;
+  padding: 1%;
+  background-color: #38302E;
+}
+
+.TopBanner {
+  background-color: #6F6866;
+  margin: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 1%;
+  padding-bottom: 5%;
+}
+
+.SubBanner {
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #6F6866;
+  padding-top: 2%;
+  padding-bottom: 2%;
+}
+
+.spacer {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 1.5%;
+  padding-bottom: 1.5%;
 }
