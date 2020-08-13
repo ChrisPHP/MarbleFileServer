@@ -20,7 +20,6 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
   files := r.MultipartForm.File["myFile"]
 
   for _, handler := range files {
-    fmt.Println(handler.Filename)
     file, err := handler.Open()
     defer file.Close()
     if err != nil {

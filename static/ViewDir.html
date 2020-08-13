@@ -10,6 +10,7 @@
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="js/main.js"></script>
 </head>
 <body>
   <div class="container">
@@ -38,16 +39,16 @@
       <div class="row spacer">
         <div class="col-md-6">
           <h2>Create a folder</h2>
-            <form class="d-flex justify-content-between" method="POST" action="/Create">
-              <input type="text" name="newDir">
+            <form class="d-flex justify-content-between" method="POST" action="/Create" onsubmit="return validate(this)">
+              <input type="text" name="newDir" required>
               <input type="hidden" name="dirs" value="{{.CurDir}}">
               <input class="btn btn-success" type="submit" value="Create">
             </form>
         </div>
         <div class="col-md-6">
           <h2>Upload a file</h2>
-            <form class="d-flex justify-content-between" method="POST" action="/upload" enctype="multipart/form-data">
-              <input type="file" name="myFile" multiple="multiple">
+            <form class="d-flex justify-content-between" method="POST" action="/upload" enctype="multipart/form-data" onsubmit="return validate(this)">
+              <input type="file" name="myFile" multiple="multiple" required>
               <input type="hidden" name="dirs" value="{{.CurDir}}">
               <input class="btn btn-success" type="submit" value="Upload">
             </form>
@@ -68,10 +69,10 @@
                       <input type="hidden" value="{{$.CurDir}}" name="PrevDir" />
                       <input type="submit" value="{{.Fold}}" />
                     </form>
-                    <form method="POST" action="/Delete">
+                    <form method="POST" action="/Delete" onsubmit="return validate(this)">
                       <input type="hidden" name="dirs" value="{{$.CurDir}}" />
                       <input type="hidden" name="DelFile" value="{{.FoldDir}}" />
-                      <input class="btn btn-outline-danger" type="submit" value="Delete" />
+                      <input class="btn btn-outline-danger" type="submit" value="Delete"/>
                     </form>
                   </div>
                 {{end}}
@@ -88,10 +89,10 @@
                       <input type="hidden" name="FoldFile" value="{{.FileDir}}" />
                       <input type="submit" value="{{.File}}" />
                     </form>
-                    <form method="POST" action="/Delete">
+                    <form method="POST" action="/Delete" onsubmit="return validate(this)">
                       <input type="hidden" name="dirs" value="{{$.CurDir}}" />
                       <input type="hidden" name="DelFile" value="{{.FileDir}}" />
-                      <input class="btn btn-outline-danger" type="submit" value="Delete" />
+                      <input class="btn btn-outline-danger" type="submit" value="Delete"/>
                     </form>
                   </div>
                   {{end}}
