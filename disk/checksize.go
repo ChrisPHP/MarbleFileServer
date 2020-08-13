@@ -28,8 +28,6 @@ type Redirect struct {
   Fold string
 }
 
-var glob string
-
 func DeleteHandler(w http.ResponseWriter, r *http.Request) {
   //Delete file Handler
   err := os.Remove(r.FormValue("DelFile"))
@@ -37,13 +35,11 @@ func DeleteHandler(w http.ResponseWriter, r *http.Request) {
     fmt.Println(err)
     return
   }
-  fmt.Println(r.FormValue("dirs"))
   DirHandler(w, r)
 }
 
 //Serve file for download or viewing
 func DownloadHandler(w http.ResponseWriter, r *http.Request) {
-  fmt.Println(r.FormValue("FoldFile"))
   http.ServeFile(w, r, r.FormValue("FoldFile"))
 }
 
