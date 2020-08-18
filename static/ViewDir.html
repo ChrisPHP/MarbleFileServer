@@ -16,8 +16,22 @@
   <div class="container">
 
     <div class="TopBanner">
-      <h1>Marble's File Server</h1>
-      <p>Alpha</p>
+      <div class="d-flex justify-content-between">
+        <div class="p-2">
+          <h1>Marble's File Server</h1>
+          <p>Alpha</p>
+        </div>
+        <div class="p-2">
+            <form method="POST" action="/change" onsubmit="return validate(this)">
+                <input type="password" name="password" required>
+                <input class="btn btn-warning" type="submit" value="change password">
+            </form>
+            <br>
+            <form class="d-flex justify-content-end" method="POST" action="/logout">
+                <input class="btn btn-warning" type="submit" value="logout">
+            </form>
+        </div>
+      </div>
     </div>
 
     <div class="d-flex justify-content-around spacer">

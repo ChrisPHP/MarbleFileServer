@@ -7,6 +7,7 @@ import (
   "html/template"
   "os"
   "strings"
+  "github.com/ChrisPHP/MarbleFileServer/cookies"
 )
 
 type Content struct {
@@ -44,6 +45,12 @@ func DownloadHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DirHandler(w http.ResponseWriter, r *http.Request) {
+  if (cookies.AuthCheck(w, r) != true) {
+    http.Error(w, "Forbidden", http.StatusForbidden)
+    return
+  }
+
+
   tmpl := template.Must(template.ParseFiles("./static/ViewDir.html"))
 
 
