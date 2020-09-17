@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Marble's File Server</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, intial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="js/main.js"></script>
+</head>
+<body>
+  <div class="container">
+
+    <div class="TopBanner">
+      <h1>Marble's File Server</h1>
+      <p>Alpha</p>
+    </div>
+
+    <div class="d-flex justify-content-around spacer">
+      <form method="POST" action="/">
+        <input class="btn btn-primary btn-lg" type="submit" value="home" />
+      </form>
+
+      <form method="POST" action="/view">
+        <input type="hidden" name="dirs" value="{{.PrevDir}}" />
+        <input type="hidden" name="PrevDir" value="{{.CurDir}}" />
+        <input class="btn btn-primary btn-lg" type="submit" value="Go back" />
+      </form>
+    </div>
+
+    <div class="SubBanner">
+      <h1>Files in {{.CurDir}}</h2>
+    </div>
+
+      <div class="row spacer">
+        <div class="col-md-6">
+          <h2>Create a folder</h2>
+            <form class="d-flex justify-content-between" method="POST" action="/Create" onsubmit="return validate(this)">
+              <input type="text" name="newDir" required>
+              <input type="hidden" name="dirs" value="{{.CurDir}}">
+              <input class="btn btn-success" type="submit" value="Create">
+            </form>
+        </div>
+        <div class="col-md-6">
+          <h2>Upload a file</h2>
+            <form class="d-flex justify-content-between" method="POST" action="/upload" enctype="multipart/form-data" onsubmit="return validate(this)">
+              <input type="file" name="myFile" multiple="multiple" required>
+              <input type="hidden" name="dirs" value="{{.CurDir}}">
+              <input class="btn btn-success" type="submit" value="Upload">
+            </form>
+        </div>
+      </div>
+
+      <div class="SubBanner">
+      <h1>Click to open a folder or download a file</h1>
+        <div class="row">
+          <div class="col-md-6">
+            <h2 class="Center Itemheading">Folders</h2>
+              <div class="Contents">
+              {{range .Contents}}
+                {{if .Fold}}
+                  <div class="d-flex justify-content-between">
+                    <form method="POST" action="/view">
+                      <input type="hidden" value="{{.FoldDir}}/" name="dirs" />
+                      <input type="hidden" value="{{$.CurDir}}" name="PrevDir" />
+                      <input type="submit" value="{{.Fold}}" />
+                    </form>
+                    <form method="POST" action="/Delete" onsubmit="return validate(this)">
+                      <input type="hidden" name="dirs" value="{{$.CurDir}}" />
+                      <input type="hidden" name="DelFile" value="{{.FoldDir}}" />
+                      <input class="btn btn-outline-danger" type="submit" value="Delete"/>
+                    </form>
+                  </div>
+                {{end}}
+              {{end}}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <h2 class="Center Itemheading">Files</h2>
+              <div class="Contents">
+                {{range .Contents}}
+                  {{if .File}}
+                  <div class="d-flex justify-content-between">
+                    <form method="POST" action="/Download">
+                      <input type="hidden" name="FoldFile" value="{{.FileDir}}" />
+                      <input type="submit" value="{{.File}}" />
+                    </form>
+                    <form method="POST" action="/Delete" onsubmit="return validate(this)">
+                      <input type="hidden" name="dirs" value="{{$.CurDir}}" />
+                      <input type="hidden" name="DelFile" value="{{.FileDir}}" />
+                      <input class="btn btn-outline-danger" type="submit" value="Delete"/>
+                    </form>
+                  </div>
+                  {{end}}
+                {{end}}
+              </div>
+            </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
