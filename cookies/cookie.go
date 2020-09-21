@@ -13,7 +13,7 @@ var (
 )
 
 func CookieUsername(w http.ResponseWriter, r *http.Request) string {
-  session, _ := store.Get(r, "COOKIE-NAME")
+  session, _ := store.Get(r, "Marble-Cookie")
 
   Name := fmt.Sprintf("%v", session.Values["UserName"])
 
@@ -21,7 +21,7 @@ func CookieUsername(w http.ResponseWriter, r *http.Request) string {
 }
 
 func AuthCheck(w http.ResponseWriter, r *http.Request) bool {
-  session, _ := store.Get(r, "COOKIE-NAME")
+  session, _ := store.Get(r, "Marble-Cookie")
 
   if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
     return false
@@ -30,7 +30,7 @@ func AuthCheck(w http.ResponseWriter, r *http.Request) bool {
 }
 
 func CookieCreate(w http.ResponseWriter, r *http.Request, Name string) {
-  session, _ := store.Get(r, "COOKIE-NAME")
+  session, _ := store.Get(r, "Marble-Cookie")
 
   session.Values["authenticated"] = true
   session.Values["UserName"] = Name
@@ -38,7 +38,7 @@ func CookieCreate(w http.ResponseWriter, r *http.Request, Name string) {
 }
 
 func CookieRemove(w http.ResponseWriter, r *http.Request) {
-  session, _ := store.Get(r, "COOKIE-NAME")
+  session, _ := store.Get(r, "Marble-Cookie")
 
   session.Values["authenticated"] = false
   session.Save(r, w)

@@ -83,8 +83,6 @@ func ChangeHandler(w http.ResponseWriter, r *http.Request) {
     fmt.Println(err)
   }
 
-  fmt.Println("Successfully connected!")
-
   hash := hasher(r.FormValue("password"))
 
   QueryString := "UPDATE users SET password = $2 WHERE username = $1;"
@@ -111,8 +109,6 @@ func SigninHandler(w http.ResponseWriter, r *http.Request) {
   if (err != nil) {
     fmt.Println(err)
   }
-
-  fmt.Println("Successfully connected!")
 
   var User users
 
