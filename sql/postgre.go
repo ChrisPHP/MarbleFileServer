@@ -5,23 +5,42 @@ import (
     "fmt"
     "net/http"
     "html/template"
+    "io/ioutil"
+    "gopkg.in/yaml.v2"
 
     "github.com/ChrisPHP/MarbleFileServer/cookies"
     "golang.org/x/crypto/bcrypt"
     _ "github.com/lib/pq"
 )
 
-const (
-  host = "localhost"
-  port = 5432
-  sqluser = "postgres"
-  sqlpassword = "SQL-PASSWORD-HERE"
-  dbname  = "DATABASENAME-HERE"
-)
+type Drives struct {
+  Storage string
+  Label string
+}
 
-type users struct {
+type config struct {
   Name string
   password string
+  Host string
+  Port int
+  Sqluser string
+  Sqlpassword string
+  Dbname string
+  Drives []Drives
+}
+
+func (c *config) YamlReader() *config {
+  file, err := ioutil.ReadFile("config.yaml")
+  if err != nil {
+    fmt.Println(err)
+  }
+
+  err = yaml.Unmarshal([]byte(file), c)
+  if err != nil {
+    fmt.Println(err)
+  }
+
+  return c
 }
 
 func hasher(pass string) (string) {
@@ -54,7 +73,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
   tmpl := template.Must(template.ParseFiles("./static/dirs.html"))
 
-  var User users
+  var User config
 
   User.Name = cookies.CookieUsername(w, r)
 
@@ -70,7 +89,10 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ChangeHandler(w http.ResponseWriter, r *http.Request) {
-  psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+ "password=%s dbname=%s sslmode=disable", host, port, sqluser, sqlpassword, dbname)
+  var c config
+  c.YamlReader()
+
+  psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+ "password=%s dbname=%s sslmode=disable", c.Host, c.Port, c.Sqluser, c.Sqlpassword, c.Dbname)
 
   db, err := sql.Open("postgres", psqlInfo)
   if (err != nil) {
@@ -97,7 +119,10 @@ func ChangeHandler(w http.ResponseWriter, r *http.Request) {
 func SigninHandler(w http.ResponseWriter, r *http.Request) {
   tmpl := template.Must(template.ParseFiles("./static/dirs.html"))
 
-  psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+ "password=%s dbname=%s sslmode=disable", host, port, sqluser, sqlpassword, dbname)
+  var c config
+  c.YamlReader()
+
+  psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+ "password=%s dbname=%s sslmode=disable", c.Host, c.Port, c.Sqluser, c.Sqlpassword, c.Dbname)
 
   db, err := sql.Open("postgres", psqlInfo)
   if (err != nil) {
@@ -110,13 +135,11 @@ func SigninHandler(w http.ResponseWriter, r *http.Request) {
     fmt.Println(err)
   }
 
-  var User users
-
   QueryString := "SELECT password FROM users WHERE username = $1"
 
   row := db.QueryRow(QueryString, r.FormValue("username"))
 
-  err = row.Scan(&User.password)
+  err = row.Scan(&c.password)
   if err != nil {
     if err == sql.ErrNoRows {
       fmt.Println("No rows were returned")
@@ -126,16 +149,16 @@ func SigninHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  if (checkHash(r.FormValue("password"), User.password) != true) {
+  if (checkHash(r.FormValue("password"), c.password) != true) {
     fmt.Println("Passwords do not match")
     return
   }
 
   cookies.CookieCreate(w, r, r.FormValue("username"))
 
-  User.Name = r.FormValue("username")
+  c.Name = r.FormValue("username")
 
-  err = tmpl.Execute(w, User)
+  err = tmpl.Execute(w, c)
     if err != nil {
       fmt.Println(err)
     }

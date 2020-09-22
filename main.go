@@ -10,16 +10,6 @@ import (
   "github.com/ChrisPHP/MarbleFileServer/sql"
 )
 
-type TheFile struct {
-  Itm string
-  Price int
-}
-
-type Dir struct {
-  Title string
-  MyFiles []TheFile
-}
-
 func setupRoutes() {
   fileServer := http.FileServer(http.Dir("./static"))
   http.Handle("/", fileServer)

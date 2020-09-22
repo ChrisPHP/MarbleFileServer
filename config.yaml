@@ -1,0 +1,10 @@
+#Editable template to add new drives and sql login details
+host: localhost
+port: 5432
+sqluser: postgres
+sqlpassword: SQL-PASSWORD-HERE
+dbname: DATABASENAME-HERE
+
+drives:
+  - storage: /DriveName/
+    label: Frontend name

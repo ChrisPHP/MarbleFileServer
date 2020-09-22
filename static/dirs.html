@@ -42,7 +42,9 @@
         <h2>Choose Storage Device</h2>
         <form class="d-flex justify-content-around" method="POST" action="/view">
           <select id="dirs" name="dirs">
-            <option value="/Marble1/">4tb HDD</option>
+            {{range .Drives}}
+            <option value="{{.Storage}}">{{.Label}}</option>
+            {{end}}
           </select>
           <input class="btn btn-primary btn-lg"  type="submit" value="View" />
         </form>

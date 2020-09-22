@@ -7,6 +7,7 @@ import (
   "html/template"
   "os"
   "strings"
+
   "github.com/ChrisPHP/MarbleFileServer/cookies"
 )
 
@@ -24,10 +25,6 @@ type Dir struct {
   TheDir string
 }
 
-type Redirect struct {
-  Result string
-  Fold string
-}
 
 func DeleteHandler(w http.ResponseWriter, r *http.Request) {
   //Delete file Handler
