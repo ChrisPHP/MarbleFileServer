@@ -11,7 +11,7 @@ Connect to a servers ip via a browser to upload and download files anywhere, sup
 
 ## Getting Started
 
-MarbleFileServer is a simple file server software that runs on Linux but may also support Linux. It only requires a few changes in order to get it to work.
+MarbleFileServer is a simple file server software that runs on Linux but may also support Windows. It only requires a few changes in order to get it to work.
 
 ### Prerequisites
 
