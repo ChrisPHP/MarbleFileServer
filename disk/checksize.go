@@ -7,6 +7,7 @@ import (
   "html/template"
   "os"
   "strings"
+  "gopkg.in/yaml.v2"
 
   "github.com/ChrisPHP/MarbleFileServer/cookies"
 )
@@ -24,6 +25,39 @@ type Dir struct {
   PrevDir string
   TheDir string
 }
+
+//Repetitive code from the postgre.go file
+//#########################################################
+type Drives struct {
+  Storage string
+  Label string
+}
+
+type config struct {
+  Name string
+  password string
+  Host string
+  Port int
+  Sqluser string
+  Sqlpassword string
+  Dbname string
+  Drives []Drives
+}
+
+func (c *config) YamlReader() *config {
+  file, err := ioutil.ReadFile("config.yaml")
+  if err != nil {
+    fmt.Println(err)
+  }
+
+  err = yaml.Unmarshal([]byte(file), c)
+  if err != nil {
+    fmt.Println(err)
+  }
+
+  return c
+}
+//#########################################################
 
 
 func DeleteHandler(w http.ResponseWriter, r *http.Request) {
@@ -62,20 +96,32 @@ func DirHandler(w http.ResponseWriter, r *http.Request) {
     fmt.Println(err)
   }
 
-  var dir Dir
+  if _, err = os.Stat(r.FormValue("dirs")); os.IsNotExist(err) {
+    tmpl := template.Must(template.ParseFiles("./static/err.html"))
+    tmpl.Execute(w, err)
+    fmt.Println(err)
+    return
+  }
 
-  if (r.FormValue("PrevDir") == "") {
-    dir.PrevDir = "/Marble1/"
-  } else {
-    var x string
-    if (r.FormValue("dirs") != "/Marble1/") {
-      parts := strings.SplitAfter(r.FormValue("dirs"), "/")
-      for i := 0; i < len(parts) - 2; i++ {
-        x += parts[i]
-      }
-      dir.PrevDir = x
-    } else {
+  var dir Dir
+  var conf config
+  conf.YamlReader()
+
+
+  for _, elem := range conf.Drives {
+    if (r.FormValue("PrevDir") == "") {
       dir.PrevDir = r.FormValue("dirs")
+    } else {
+      var x string
+      if (r.FormValue("dirs") != elem.Storage) {
+        parts := strings.SplitAfter(r.FormValue("dirs"), "/")
+        for i := 0; i < len(parts) - 2; i++ {
+          x += parts[i]
+        }
+        dir.PrevDir = x
+      } else {
+        dir.PrevDir = r.FormValue("dirs")
+      }
     }
   }
 
