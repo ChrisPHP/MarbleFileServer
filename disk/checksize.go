@@ -30,13 +30,6 @@ type Drives struct {
 }
 
 type config struct {
-  Name string
-  password string
-  Host string
-  Port int
-  Sqluser string
-  Sqlpassword string
-  Dbname string
   Drives []Drives
 }
 
@@ -136,6 +129,17 @@ func DirHandler(w http.ResponseWriter, r *http.Request) {
     }
 }
 
+func DriveHandler(w http.ResponseWriter, r *http.Request) {
+  tmpl := template.Must(template.ParseFiles("./static/dirs.html"))
+
+  var conf config
+  conf.YamlReader()
+
+  err := tmpl.Execute(w, conf)
+    if err != nil {
+      fmt.Println(err)
+    }
+}
 
 //Create a directory
 func CreateDirHandler(w http.ResponseWriter, r *http.Request) {

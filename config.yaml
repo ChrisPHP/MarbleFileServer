@@ -1,4 +1,4 @@
 #Editable template to add new drives and sql login details
 drives:
-  - storage: /Marble1/
-    label: 4tb Drive
+  - storage: /DriveName/
+    label: Frontend name
